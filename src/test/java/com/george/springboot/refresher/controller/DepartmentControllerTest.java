@@ -3,6 +3,7 @@ package com.george.springboot.refresher.controller;
 import com.george.springboot.refresher.SpringBootRefresherApplication;
 import com.george.springboot.refresher.entity.Department;
 import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,9 +17,15 @@ class IntegrationTests {
   @Value("${local.server.port:0}")
   protected int port;
 
+  @Value("${jwt.token}")
+  protected String token;
+
   @BeforeEach
   void setUp() {
     RestAssured.port = port;
+    RestAssured.requestSpecification = new RequestSpecBuilder()
+        .addHeader("Authorization", String.format("Bearer %s", token))
+        .build();
   }
 }
 
